@@ -1,12 +1,12 @@
-import React from 'react'
+import {useState, useEffect, useContext} from 'react'
 import PopupWithForm from './PopupWithForm';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
 export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
-  const [name, setName] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const currentUser = React.useContext(CurrentUserContext);
-  const [buttonText, setButtonText] = React.useState('Сохранить');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const currentUser = useContext(CurrentUserContext);
+  const [buttonText, setButtonText] = useState('Сохранить');
 
   function handleNameChange(e) {
     setName(e.target.value);
@@ -16,7 +16,7 @@ export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     setDescription(e.target.value);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about)
   }, [currentUser, isOpen]);

@@ -1,16 +1,16 @@
-import React from 'react';
+import {useContext, useState} from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
 import iTrash from '../images/trash.svg';
 
 export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
-  const currentUser = React.useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
   const isOwn = card.owner._id === currentUser._id;
   const cardDeleteButtonClassName = (
     `card__img-trash ${isOwn ? 'card__img-trash-visible' : ''}`
   );
 
-  const [islike, setIsLike] = React.useState(
+  const [islike, setIsLike] = useState(
     card.likes.some(i => i._id === currentUser._id)
   );
   function handleCardClick() {

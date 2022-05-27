@@ -1,5 +1,4 @@
-import React from 'react';
-import api from '../utils/api';
+import {useContext} from 'react';
 import Card from './Card';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
@@ -7,7 +6,7 @@ import button from '../images/add_btn.svg';
 
 
 export default function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onCardLike, onCardDelete }) {
-  const currentUser = React.useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
 
   return (
     <main className="main">

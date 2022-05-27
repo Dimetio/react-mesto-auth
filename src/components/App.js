@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState, useEffect} from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
@@ -17,25 +17,19 @@ import * as auth from '../utils/auth';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  const [isInfoPopupOpen, setIsInfoPopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = React.useState({ name: '', link: '' });
-  const [cards, setCards] = React.useState([]);
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
+  const [cards, setCards] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
 
-  const [loggedIn, setLoggedIn] = React.useState(false);
-  const [isRegOk, setIsRegOk] = React.useState(false);
-  const [userData, setUserData] = React.useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isRegOk, setIsRegOk] = useState(false);
+  const [userData, setUserData] = useState({});
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if(loggedIn) {
-      navigate('/');
-    }
-  }, [loggedIn]);
 
   function tokenCheck() {
     if(localStorage.getItem('jwt')) {
@@ -49,7 +43,6 @@ function App() {
             };
             setLoggedIn(true);
             setUserData(userData);
-            console.log(userData)
           }
         })
         .catch(err => console.log(err));
@@ -81,6 +74,7 @@ function App() {
         }
       })
       .catch((err) => {
+        setIsInfoPopupOpen(true);
         navigate("/");
       });
   }
@@ -99,17 +93,6 @@ function App() {
         setIsInfoPopupOpen(true);
       });
   }
-
-  React.useEffect(() => {
-    tokenCheck();
-    
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([userInfo, cardList]) => {
-        setCurrentUser(userInfo);
-        setCards(cardList);
-      })
-      .catch(err => console.log(err));
-  }, []);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -176,6 +159,25 @@ function App() {
       })
       .catch(err => console.log(err));
   }
+
+  useEffect(() => {
+    if(loggedIn) {
+      navigate('/');
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    tokenCheck();
+
+    if(loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCards()])
+      .then(([userInfo, cardList]) => {
+        setCurrentUser(userInfo);
+        setCards(cardList);
+      })
+      .catch(err => console.log(err));
+    }
+  }, [loggedIn]);
 
   return (
     <div className="page">
