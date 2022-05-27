@@ -1,22 +1,23 @@
 import {useState} from 'react';
+import {Link} from 'react-router-dom';
 
-export default function Login({handleLogin}) {
+export default function Register({handleRegister}) {
   const [formParams, setFormParams] = useState({email: "", password: ""});
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     let {email, password} = formParams;
-    handleLogin({email, password})
+    handleRegister({email, password})
       .catch(err => {
         console.log(err.message)
       });
   }
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     const {name, value} = e.target;
     setFormParams(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   }
 
@@ -26,15 +27,14 @@ export default function Login({handleLogin}) {
         className="sign__form"
         onSubmit={handleSubmit}
       >
-        <h2 className="sign__title">Вход</h2>
-
+        <h2 className="sign__title">Регистрация</h2>
         <input
           className="sign__input"
           type="email"
           name="email"
           placeholder="Email"
-          value={formParams.email || ''}
           required
+          value={formParams.email || ''}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -44,15 +44,24 @@ export default function Login({handleLogin}) {
           type="password"
           name="password"
           placeholder="Пароль"
-          required
           minLength="4"
           maxLength="12"
+          required
           value={formParams.password || ''}
           onChange={handleChange}
           autoComplete="off"
         />
 
-        <button className="sign__submit">Войти</button>
+        <button className="sign__submit">Зарегистрироваться</button>
+
+        <p className="sign__text">Уже зарегистрированы?&nbsp;
+          <Link 
+            to="/sign-in" 
+            className="sign__link"
+          >
+          Войти
+          </Link>
+        </p>
       </form>
     </div>
   )
