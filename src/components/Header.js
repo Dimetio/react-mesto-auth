@@ -4,7 +4,7 @@ import logo from '../images/logo.svg';
 import burger from '../images/burger.svg';
 import closeBurger from '../images/burger-close.svg';
 
-export default function Header({loggedIn, handleSignOut, navigateToLogin, navigateToRegister}) {
+export default function Header({loggedIn, userData, handleSignOut, navigateToLogin, navigateToRegister}) {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
@@ -43,7 +43,14 @@ export default function Header({loggedIn, handleSignOut, navigateToLogin, naviga
         </div> 
       </div>
 
-      <div className={`header__wrap`} style={{display: isMenuOpen || width > 600 ? "flex" : "none"}}>
+      <div 
+        className="header__wrap"
+        style={{display: isMenuOpen || width > 600 ? "flex" : "none"}}
+      >        
+        <p className='header__user'>
+          {loggedIn && userData && userData.email}
+        </p>
+
         <div 
           className="header__link" 
           to="/sign-in"
