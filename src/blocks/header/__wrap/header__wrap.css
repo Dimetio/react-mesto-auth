@@ -1,0 +1,15 @@
+.header__wrap {  
+  padding-top: 45px;
+  padding-bottom: 41px;
+}
+
+@media (max-width: 640px) {
+  .header__wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(84, 84, 84, .7);
+    padding-top: 31px;
+    padding-bottom: 28px;
+  }
+}
