@@ -3,10 +3,10 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import DeletionConfirmationPopup from './DeletionConfirmationPopup';
 import ImagePopup from './ImagePopup';
 import Login from './Login';
 import Register from './Register';
@@ -20,10 +20,13 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = useState(false);
+
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
 
   const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
   const [cards, setCards] = useState([]);
+  const [cardToRemove, setCardToRemove] = useState({})
   const [currentUser, setCurrentUser] = useState({});
 
   const [loggedIn, setLoggedIn] = useState(false);
@@ -110,11 +113,17 @@ function App() {
     setSelectedCard(card);
   }
 
+  function handleCardTrashClick(card) {
+    setCardToRemove(card);
+    setIsCardDeletePopupOpen(true);
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsInfoPopupOpen(false);
+    setIsCardDeletePopupOpen(false);
     setSelectedCard({ name: '', link: '' });
   }
 
@@ -152,12 +161,14 @@ function App() {
       .catch(err => console.log(err));
   }
 
-  function handleCardDelete(card) {
-    api.deleteCard(card._id)
-      .then((newCard) => {
-        setCards((state) => state.filter((c) => (c._id === card._id ? "" : newCard)))
+  function handleCardDelete() {
+    console.log(cardToRemove)
+    api.deleteCard(cardToRemove._id)
+      .then(() => {
+        setCards(cards.filter((el) => (el._id !== cardToRemove._id)))
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => closeAllPopups());
   }
 
   useEffect(() => {
@@ -205,7 +216,7 @@ function App() {
                 onCardClick={handleCardClick}
                 cards={cards}
                 onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
+                onCardDelete={handleCardTrashClick}
               />
             </ProtectedRoute>
             }
@@ -248,17 +259,15 @@ function App() {
           onAddPlace={handleAddPlaceSubmit}
         />
 
-        <PopupWithForm
-          name="popup-delete"
-          title="Вы уверены?"
-          buttonText="Да"
-          //isOpen={}
+        <DeletionConfirmationPopup
+          isOpen={isCardDeletePopupOpen}
           onClose={closeAllPopups}
+          onSubmit={handleCardDelete}
         />
 
         <InfoTooltip
-          onClose={closeAllPopups}
           isOpen={isInfoPopupOpen}
+          onClose={closeAllPopups}
           isOk={isRegOk}
         />
       </CurrentUserContext.Provider>
