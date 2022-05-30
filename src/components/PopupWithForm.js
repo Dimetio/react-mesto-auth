@@ -1,4 +1,4 @@
-export default function PopupWithForm({ name, title, children, buttonText, isOpen, onClose, onSubmit }) {
+export default function PopupWithForm({ name, title, children, buttonText, isOpen, onClose, onSubmit, isSubmitButtonEnabled }) {
   return (
     <div className={`popup ${name} ${isOpen && "popup_opened"}`}>
       <div className="popup__container">
@@ -15,8 +15,10 @@ export default function PopupWithForm({ name, title, children, buttonText, isOpe
           {children}
 
           <button
-            className="popup__submit"
-            type="submit">
+            className={`popup__submit ${!isSubmitButtonEnabled && "popup__submit_inactive"}`}
+            type="submit"
+            disabled={!isSubmitButtonEnabled}
+            >
             {buttonText}
           </button>
         </form>
