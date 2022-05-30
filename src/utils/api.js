@@ -45,7 +45,7 @@ class Api {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({
-        name: card.name,
+        name: card.title,
         link: card.link
       })
     })
